@@ -64,37 +64,51 @@ class DesignerRegistrationSerializer(serializers.ModelSerializer):
         return designer_registration
 
 
-# class DesignerRegistrationSerializer(serializers.ModelSerializer):
-#     application_type = serializers.PrimaryKeyRelatedField(queryset=ApplicationType.objects.all(), many=True)
-#     designer_category = serializers.PrimaryKeyRelatedField(queryset=DesignerCategory.objects.all(), many=True)
-
-#     class Meta:
-#         model = DesignerRegistration
-#         fields = ['id', 'brand_name', 'email', 'phone_number', 'country', 'state', 'city', 'postal_code', 'application_type', 'designer_category']
-
-#     def create(self, validated_data):
-#         application_types = validated_data.pop('application_type')
-#         designer_categories = validated_data.pop('designer_category')
-
-#         designer_registration = DesignerRegistration.objects.create(**validated_data)
-#         designer_registration.application_type.set(application_types)
-#         designer_registration.designer_category.set(designer_categories)
-
-#         return designer_registration
-
-
 class GallerySerializer(serializers.ModelSerializer):
-    image = serializers.ImageField()
     class Meta:
         model = Gallery
-        fields = ('title','image')
+        fields = '__all__'
+
+class UpcomingEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UpcomingEvent
+        fields = '__all__'
+
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = '__all__'
 
 
-# class UpcomingEventSerializer(serializers.ModelSerializer):
+# class GallerySerializer(serializers.ModelSerializer):
+#     image = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = Gallery
+#         fields = ('title', 'image')
+
+#     def get_image(self, obj):
+#         request = self.context.get('request')
+#         return request.build_absolute_uri(obj.image.url)
+
+
+# # class GallerySerializer(serializers.ModelSerializer):
+# #     image = serializers.ImageField()
+# #     class Meta:
+# #         model = Gallery
+# #         fields = ('title','image')
+
+# class BlogSerializer(serializers.ModelSerializer):
 #     image = serializers.ImageField()
 #     class Meta:
-#         model = UpcomingEvent
-#         fields = ('title', 'image')
+#         model = Blog
+#         fields = '__all__'
+
+# # class UpcomingEventSerializer(serializers.ModelSerializer):
+# #     image = serializers.ImageField()
+# #     class Meta:
+# #         model = UpcomingEvent
+# #         fields = ('title', 'image')
 
 
 # class BlogSerializer(serializers.ModelSerializer):
@@ -111,8 +125,3 @@ class GallerySerializer(serializers.ModelSerializer):
 #         model = Blog
 #         fields = ('title', 'image', 'description', 'body')
 
-class BlogSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField()
-    class Meta:
-        model = Blog
-        fields = ('title','image','description','body')

@@ -96,42 +96,61 @@ class DesignerCategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 
-# API Routes
-@api_view(['GET'])
-def view_all_routes(request):
-    data = [
-        'api/gallery-views/',
-        'api/blog/',
-    ]
-    return Response(data)
+# from rest_framework import generics
+# from .models import Gallery, UpcomingEvent, Blog
+# from .serializers import GallerySerializer, UpcomingEventSerializer, BlogSerializer
+
+class GalleryListView(generics.ListAPIView):
+    queryset = Gallery.objects.all()
+    serializer_class = GallerySerializer
 
 
+class UpcomingEventListView(generics.ListAPIView):
+    queryset = UpcomingEvent.objects.all()
+    serializer_class = UpcomingEventSerializer
+
+
+class BlogListView(generics.ListAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+
+# # API Routes
 # @api_view(['GET'])
-# def userInfo(request):
-#     user = request.user
-#     serializer = UserSerializer(user)
+# def view_all_routes(request):
+#     data = [
+#         'api/gallery-views/',
+#         'api/blog/',
+#     ]
+#     return Response(data)
+
+
+# # @api_view(['GET'])
+# # def userInfo(request):
+# #     user = request.user
+# #     serializer = UserSerializer(user)
+# #     return Response(serializer.data)
+
+# # Home Page Display Shows View
+# @api_view(['GET'])
+# def galleryViews(request):
+#     images = Gallery.objects.all()
+#     serializer = GallerySerializer(images, many=True)
 #     return Response(serializer.data)
 
-# Home Page Display Shows View
-@api_view(['GET'])
-def galleryViews(request):
-    images = Gallery.objects.all()
-    serializer = GallerySerializer(images, many=True)
-    return Response(serializer.data)
-
-# Blog Section View
-@api_view(['GET'])
-def blog_section(request):
-    images = Blog.objects.all()
-    serializer = BlogSerializer(images, many=True)
-    return Response(serializer.data)
-
-# Upcoming Event View
+# # Blog Section View
 # @api_view(['GET'])
-# def upcoming_event(request):
-#     images = UpcomingEvent.objects.all()
-#     serializer = UpcomingEventSerializer(images, many=True)
+# def blog_section(request):
+#     images = Blog.objects.all()
+#     serializer = BlogSerializer(images, many=True)
 #     return Response(serializer.data)
+
+# # Upcoming Event View
+# # @api_view(['GET'])
+# # def upcoming_event(request):
+# #     images = UpcomingEvent.objects.all()
+# #     serializer = UpcomingEventSerializer(images, many=True)
+# #     return Response(serializer.data)
 
 
 

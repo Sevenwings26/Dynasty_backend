@@ -1,15 +1,26 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import (
-    DesignerRegistrationCreateView,
-    ApplicationTypeViewSet,
-    DesignerCategoryViewSet,
-    LoginViewset,
-    UserViewset,
-    RegisterViewset,
-    galleryViews,
-    blog_section,
-)
+# from .views import (
+#     DesignerRegistrationCreateView,
+#     ApplicationTypeViewSet,
+#     DesignerCategoryViewSet,
+#     LoginViewset,
+#     UserViewset,
+#     RegisterViewset,
+#     galleryViews,
+#     blog_section,
+# )
+
+from django.urls import path
+from .views import *
+# GalleryListView, UpcomingEventListView, BlogListView
+
+urlpatterns = [
+]
+
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 # Define your router and register viewsets
 router = DefaultRouter()
@@ -25,10 +36,18 @@ urlpatterns = [
     path('api/designer-categories/', DesignerCategoryViewSet.as_view({'get': 'list'}), name='designer_categories'),
 
     # api get 
-    path('api/gallery-views/', galleryViews, name='gallery' ),
-    path('api/blog/', blog_section, name='blog' ),
+    # path('api/gallery-views/', galleryViews, name='gallery' ),
+    # path('api/blog/', blog_section, name='blog' ),
+    path('api/gallery/', GalleryListView.as_view(), name='gallery-list'),
+    path('api/upcoming-events/', UpcomingEventListView.as_view(), name='upcoming-event-list'),
+    path('api/blogs/', BlogListView.as_view(), name='blog-list'),
 ]
+
+
+
 
 
 urlpatterns += router.urls
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

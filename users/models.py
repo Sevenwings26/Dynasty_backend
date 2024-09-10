@@ -162,7 +162,7 @@ class UpcomingEvent(models.Model):
 
 class Blog(models.Model):
     title = models.CharField(max_length=100, blank=False)
-    image = models.ImageField(upload_to='blog')
+    image = models.ImageField(upload_to='blog/')
     description = models.CharField(max_length=300)
     body = models.TextField()
 
