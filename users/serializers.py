@@ -13,7 +13,6 @@ class LoginSerializer(serializers.Serializer):
         ret.pop('password', None)
         return ret
 
-
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -29,6 +28,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         user = CustomUser.objects.create_user(**validated_data)
         return user
+
+
+# User-profile 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('id', 'username', 'email')
 
 
 class ApplicationTypeSerializer(serializers.ModelSerializer):
@@ -64,9 +70,9 @@ class DesignerRegistrationSerializer(serializers.ModelSerializer):
         return designer_registration
 
 
-class GallerySerializer(serializers.ModelSerializer):
+class MustReadSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Gallery
+        model = MustRead
         fields = '__all__'
 
 class UpcomingEventSerializer(serializers.ModelSerializer):
@@ -78,50 +84,4 @@ class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = '__all__'
-
-
-# class GallerySerializer(serializers.ModelSerializer):
-#     image = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = Gallery
-#         fields = ('title', 'image')
-
-#     def get_image(self, obj):
-#         request = self.context.get('request')
-#         return request.build_absolute_uri(obj.image.url)
-
-
-# # class GallerySerializer(serializers.ModelSerializer):
-# #     image = serializers.ImageField()
-# #     class Meta:
-# #         model = Gallery
-# #         fields = ('title','image')
-
-# class BlogSerializer(serializers.ModelSerializer):
-#     image = serializers.ImageField()
-#     class Meta:
-#         model = Blog
-#         fields = '__all__'
-
-# # class UpcomingEventSerializer(serializers.ModelSerializer):
-# #     image = serializers.ImageField()
-# #     class Meta:
-# #         model = UpcomingEvent
-# #         fields = ('title', 'image')
-
-
-# class BlogSerializer(serializers.ModelSerializer):
-#     image = serializers.SerializerMethodField()
-
-#     def get_image(self, obj):
-#         request = self.context.get('request')
-#         if request:
-#             return request.build_absolute_uri(obj.image.url)
-#         else:
-#             return obj.image.url
-
-#     class Meta:
-#         model = Blog
-#         fields = ('title', 'image', 'description', 'body')
 

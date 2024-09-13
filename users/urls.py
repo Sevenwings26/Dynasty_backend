@@ -1,15 +1,5 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-# from .views import (
-#     DesignerRegistrationCreateView,
-#     ApplicationTypeViewSet,
-#     DesignerCategoryViewSet,
-#     LoginViewset,
-#     UserViewset,
-#     RegisterViewset,
-#     galleryViews,
-#     blog_section,
-# )
 
 from django.urls import path
 from .views import *
@@ -36,9 +26,7 @@ urlpatterns = [
     path('api/designer-categories/', DesignerCategoryViewSet.as_view({'get': 'list'}), name='designer_categories'),
 
     # api get 
-    # path('api/gallery-views/', galleryViews, name='gallery' ),
-    # path('api/blog/', blog_section, name='blog' ),
-    path('api/gallery/', GalleryListView.as_view(), name='gallery-list'),
+    path('api/gallery/', MustReadListView.as_view(), name='gallery-list'),
     path('api/upcoming-events/', UpcomingEventListView.as_view(), name='upcoming-event-list'),
     path('api/blogs/', BlogListView.as_view(), name='blog-list'),
 ]

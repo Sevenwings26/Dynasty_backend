@@ -67,6 +67,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    # "https://arcade-backend-1.onrender.com",
+    # "https://arcade-dy.vercel.app",
+    # "https://arcade-frontend-lo4d.vercel.app",
+]
+
+
 AUTH_USER_MODEL = "users.CustomUser"
 
 AUTHENTICATION_BACKENDS = [
@@ -154,10 +162,26 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 #the email settings
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+EMAIL_PORT = 465
+# EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "lastborn.ai@gmail.com"
-EMAIL_HOST_PASSWORD = ""
-DEFAULT_FROM_EMAIL = 'CBI ANALYTICS'
+EMAIL_HOST_PASSWORD = "ngkpmhoijcyruikg"
+# EMAIL_HOST_PASSWORD = "ngkpmhoijcyruikg"
+# ngkp mhoi jcyr uikg
+
+DEFAULT_FROM_EMAIL = 'lastborn.ai@gmail.com'
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your-email@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your-app-password'
+# DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
+

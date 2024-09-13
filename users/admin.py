@@ -11,7 +11,8 @@ class DesignerRegistrationAdmin(admin.ModelAdmin):
         'brand_name', 'email', 'city', 'phone_number'
     ]
 
-admin.site.register(Gallery)
+admin.site.register(MustRead)
+# admin.site.register(Gallery)
 admin.site.register(Blog)
 admin.site.register(UpcomingEvent)
 

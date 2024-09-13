@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, status, generics
-
 from .serializers import *
 from .models import * 
 from rest_framework.response import Response 
 from django.contrib.auth import get_user_model, authenticate
 from knox.models import AuthToken
+from rest_framework.views import APIView
 
 from rest_framework.decorators import api_view
 
@@ -94,15 +94,9 @@ class DesignerCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = DesignerCategory.objects.all()
     serializer_class = DesignerCategorySerializer
 
-
-
-# from rest_framework import generics
-# from .models import Gallery, UpcomingEvent, Blog
-# from .serializers import GallerySerializer, UpcomingEventSerializer, BlogSerializer
-
-class GalleryListView(generics.ListAPIView):
-    queryset = Gallery.objects.all()
-    serializer_class = GallerySerializer
+class MustReadListView(generics.ListAPIView):
+    queryset = MustRead.objects.all()
+    serializer_class = MustReadSerializer
 
 
 class UpcomingEventListView(generics.ListAPIView):
@@ -114,106 +108,3 @@ class BlogListView(generics.ListAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
 
-
-# # API Routes
-# @api_view(['GET'])
-# def view_all_routes(request):
-#     data = [
-#         'api/gallery-views/',
-#         'api/blog/',
-#     ]
-#     return Response(data)
-
-
-# # @api_view(['GET'])
-# # def userInfo(request):
-# #     user = request.user
-# #     serializer = UserSerializer(user)
-# #     return Response(serializer.data)
-
-# # Home Page Display Shows View
-# @api_view(['GET'])
-# def galleryViews(request):
-#     images = Gallery.objects.all()
-#     serializer = GallerySerializer(images, many=True)
-#     return Response(serializer.data)
-
-# # Blog Section View
-# @api_view(['GET'])
-# def blog_section(request):
-#     images = Blog.objects.all()
-#     serializer = BlogSerializer(images, many=True)
-#     return Response(serializer.data)
-
-# # Upcoming Event View
-# # @api_view(['GET'])
-# # def upcoming_event(request):
-# #     images = UpcomingEvent.objects.all()
-# #     serializer = UpcomingEventSerializer(images, many=True)
-# #     return Response(serializer.data)
-
-
-
-# # # views.py
-# from rest_framework import generics
-# # from .models import ApplicationType, DesignerCategory
-# from .serializers import ApplicationTypeSerializer, DesignerCategorySerializer
-
-# class ApplicationTypeListView(generics.ListAPIView):
-#     queryset = ApplicationType.objects.all()
-#     serializer_class = ApplicationTypeSerializer
-
-# class DesignerCategoryListView(generics.ListAPIView):
-#     queryset = DesignerCategory.objects.all()
-#     serializer_class = DesignerCategorySerializer
-
-
-# from rest_framework import viewsets
-# from rest_framework.response import Response
-# from rest_framework.decorators import action
-# from .models import DesignerRegistration, ApplicationType, DesignerCategory
-# from .serializers import DesignerRegistrationSerializer, ApplicationTypeSerializer, DesignerCategorySerializer
-
-# class DesignerRegistrationViewSet(viewsets.ModelViewSet):
-#     queryset = DesignerRegistration.objects.all()
-#     serializer_class = DesignerRegistrationSerializer
-
-# class ApplicationTypeViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = ApplicationType.objects.all()
-#     serializer_class = ApplicationTypeSerializer
-
-# class DesignerCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = DesignerCategory.objects.all()
-#     serializer_class = DesignerCategorySerializer
-
-
-# from rest_framework import generics
-# from rest_framework.response import Response
-# from rest_framework import status
-# from .models import DesignerRegistration
-# from .serializers import DesignerRegistrationSerializer
-
-# class DesignerRegistrationCreateView(generics.CreateAPIView):
-#     queryset = DesignerRegistration.objects.all()
-#     serializer_class = DesignerRegistrationSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             self.perform_create(serializer)
-#             headers = self.get_success_headers(serializer.data)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# from rest_framework import viewsets
-# from .models import ApplicationType, DesignerCategory
-# from .serializers import ApplicationTypeSerializer, DesignerCategorySerializer
-
-# class ApplicationTypeViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = ApplicationType.objects.all()
-#     serializer_class = ApplicationTypeSerializer
-
-# class DesignerCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = DesignerCategory.objects.all()
-#     serializer_class = DesignerCategorySerializer

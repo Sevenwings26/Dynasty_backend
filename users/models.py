@@ -1,6 +1,5 @@
 from django.db import models
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 
 from django_rest_passwordreset.signals import reset_password_token_created
@@ -13,6 +12,7 @@ from django.utils.html import strip_tags
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
 
 
+# Registration models 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
@@ -58,6 +58,8 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+
+# Password reset model 
 @receiver(reset_password_token_created)
 def password_reset_token_created(reset_password_token, *args, **kwargs):
     sitelink = "http://localhost:5173/"
@@ -139,19 +141,22 @@ class DesignerCategory(models.Model):
 
     def __str__(self):
         return self.name
+# Designer application ends here 
 
 
-
-class Gallery(models.Model):
+# Mustread section model 
+class MustRead(models.Model):
     title = models.CharField(max_length=100, blank=False)
     image = models.ImageField(upload_to='Gallery-images/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    body = models.TextField(default='Paste', null=True)
     
     def __str__(self):
         return self.title
 
 
+# Event broadcast 
 class UpcomingEvent(models.Model):
     title = models.CharField(max_length=100, blank=False)
     image = models.ImageField(upload_to ='Upcoming_event/')
@@ -160,6 +165,7 @@ class UpcomingEvent(models.Model):
         return self.title
 
 
+# Blog post 
 class Blog(models.Model):
     title = models.CharField(max_length=100, blank=False)
     image = models.ImageField(upload_to='blog/')
