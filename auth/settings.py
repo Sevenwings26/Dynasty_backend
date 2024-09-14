@@ -45,7 +45,7 @@ else:
 if ENVIRONMENT == "development":
     ALLOWED_HOSTS = []
 else:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', ]
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://dynasty-backend.onrender.com']
 
 
 # Application definition
@@ -90,10 +90,14 @@ REST_KNOX = {
  
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://arcade-dynasty.vercel.app/"
+    'https://dynasty-backend.onrender.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    "https://arcade-dynasty.vercel.app/"
+    'https://dynasty-backend.onrender.com'
 ]
 
 CORS_ALLOWED_METHODS = [
