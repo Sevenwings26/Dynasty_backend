@@ -14,6 +14,18 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+# get .env variables
+import environ
+env = environ.Env()
+environ.Env.read_env()
+
+# database 
+import dj_database_url
+
+# Environment configuration 
+ENVIRONMENT = env('ENVIRONMENT', default="development")
+ENVIRONMENT = "production"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,17 +34,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-8mf6$o=$@dg^xny%7wa6)v1_vqy0rna(8_n2)jwz3(eq$%ph=3"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+if ENVIRONMENT == 'development':
+    DEBUG = True
+else:
+    DEBUG = False
+# Hosting platforms 
+if ENVIRONMENT == "development":
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -40,11 +59,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "users",
+
+    # rest
     'rest_framework',
     'corsheaders',
     'knox',
     'django_rest_passwordreset',
 
+    # media production
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +80,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 # Knox configuration
@@ -69,9 +94,33 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
-    # "https://arcade-backend-1.onrender.com",
-    # "https://arcade-dy.vercel.app",
-    # "https://arcade-frontend-lo4d.vercel.app",
+]
+
+CORS_ALLOWED_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+        'accept',
+        'accept-encoding',
+        'authorization',
+        'content-type',
+        'dnt',
+        'origin',
+        'user-agent',
+        'x-csrftoken',
+        'x-requested-with',
+]
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:5173",
 ]
 
 
@@ -107,12 +156,17 @@ WSGI_APPLICATION = "auth.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if ENVIRONMENT == "development":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASE = {
+        'default':dj_database_url.parse(env("DATABASE_URL"))
+    }
 
 
 # Password validation
@@ -148,11 +202,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Media files
-# MEDIA_URL = 'media/'
-# MEDIA_ROOT = BASE_DIR / 'media'
-
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# Specify the directory where media files are stored
+if ENVIRONMENT == "development":
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+else:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_STORAGE = {
+        'CLOUDINARY_URL': env('CLOUDINARY_URL'),
+        'CLOUDINARY_CLOUD_NAME' : env('CLOUDINARY_CLOUD_NAME'),
+        'CLOUDINARY_API_KEY': env('CLOUDINARY_API_KEY'),
+        'CLOUDINARY_API_SECRET':env('CLOUDINARY_API_SECRET'),
+    }
+
 
 
 # Default primary key field type
@@ -169,19 +231,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 # EMAIL_USE_TLS = True
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = "lastborn.ai@gmail.com"
-EMAIL_HOST_PASSWORD = "ngkpmhoijcyruikg"
-# EMAIL_HOST_PASSWORD = "ngkpmhoijcyruikg"
-# ngkp mhoi jcyr uikg
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER")
+ACCOUNT_EMAIL_SUBJECT_PREFIX = env("ACCOUNT_EMAIL_SUBJECT_PREFIX")
 
-DEFAULT_FROM_EMAIL = 'lastborn.ai@gmail.com'
-
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'your-email@gmail.com'
-# EMAIL_HOST_PASSWORD = 'your-app-password'
-# DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
 

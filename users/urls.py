@@ -32,9 +32,6 @@ urlpatterns = [
 ]
 
 
-
-
-
 urlpatterns += router.urls
 
 if settings.DEBUG:
