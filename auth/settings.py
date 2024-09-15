@@ -24,7 +24,7 @@ import dj_database_url
 
 # Environment configuration 
 ENVIRONMENT = env('ENVIRONMENT', default="development")
-# ENVIRONMENT = "production"
+ENVIRONMENT = "production"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
