@@ -75,45 +75,9 @@ class UserDetailView(APIView):
         return Response(serializer.data)
 
 
-# @api_view(['POST'])
-# def register_designer(request):
-#     if request.method == 'POST':
-#         serializer = DesignerRegistrationSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         else:
-#             print(serializer.errors)  # This will print the validation errors
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-
-# class DesignerRegistrationCreateView(generics.CreateAPIView):
-#     queryset = DesignerRegistration.objects.all()
-#     serializer_class = DesignerRegistrationSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             self.perform_create(serializer)
-#             headers = self.get_success_headers(serializer.data)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# class ApplicationTypeViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = ApplicationType.objects.all()
-#     serializer_class = ApplicationTypeSerializer
-
-# class DesignerCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = DesignerCategory.objects.all()
-#     serializer_class = DesignerCategorySerializer
-
-
-
 class DesignerRegistrationCreateView(generics.CreateAPIView):
     queryset = DesignerRegistration.objects.all()
     serializer_class = DesignerRegistrationSerializer
-
 
 
 class MustReadListView(generics.ListAPIView):

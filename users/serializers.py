@@ -36,39 +36,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'birthday']
 
 
-# class ApplicationTypeSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ApplicationType
-#         fields = ['id', 'name']
-
-# class DesignerCategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = DesignerCategory
-#         fields = ['id', 'name']
-
-# class DesignerRegistrationSerializer(serializers.ModelSerializer):
-#     application_type = ApplicationTypeSerializer(many=True)
-#     designer_category = DesignerCategorySerializer(many=True)
-
-#     class Meta:
-#         model = DesignerRegistration
-#         fields = ['id', 'brand_name', 'email', 'phone_number', 'country', 'state', 'city', 'postal_code', 'application_type', 'designer_category']
-
-#     def create(self, validated_data):
-#         application_types_data = validated_data.pop('application_type')
-#         designer_categories_data = validated_data.pop('designer_category')
-
-#         designer_registration = DesignerRegistration.objects.create(**validated_data)
-#         for app_type_data in application_types_data:
-#             app_type, created = ApplicationType.objects.get_or_create(**app_type_data)
-#             designer_registration.application_type.add(app_type)
-#         for cat_data in designer_categories_data:
-#             cat, created = DesignerCategory.objects.get_or_create(**cat_data)
-#             designer_registration.designer_category.add(cat)
-
-#         return designer_registration
-
-
 class ApplicationTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationType
@@ -80,8 +47,9 @@ class DesignerCategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class DesignerRegistrationSerializer(serializers.ModelSerializer):
-    application_type = ApplicationTypeSerializer(many=True)
-    designer_category = DesignerCategorySerializer(many=True)
+    # Accepting list of IDs instead of nested serializers
+    application_type = serializers.PrimaryKeyRelatedField(queryset=ApplicationType.objects.all(), many=True)
+    designer_category = serializers.PrimaryKeyRelatedField(queryset=DesignerCategory.objects.all(), many=True)
 
     class Meta:
         model = DesignerRegistration
@@ -91,17 +59,16 @@ class DesignerRegistrationSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        application_types_data = validated_data.pop('application_type')
-        designer_categories_data = validated_data.pop('designer_category')
+        # Pop the many-to-many related fields
+        application_types = validated_data.pop('application_type')
+        designer_categories = validated_data.pop('designer_category')
+        
+        # Create the DesignerRegistration instance
         designer_registration = DesignerRegistration.objects.create(**validated_data)
         
-        for application_type_data in application_types_data:
-            application_type, created = ApplicationType.objects.get_or_create(**application_type_data)
-            designer_registration.application_type.add(application_type)
-        
-        for designer_category_data in designer_categories_data:
-            designer_category, created = DesignerCategory.objects.get_or_create(**designer_category_data)
-            designer_registration.designer_category.add(designer_category)
+        # Add the application types and designer categories
+        designer_registration.application_type.set(application_types)
+        designer_registration.designer_category.set(designer_categories)
         
         return designer_registration
 
