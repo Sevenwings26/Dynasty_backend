@@ -30,11 +30,43 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-# User-profile 
-class UserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'username', 'email')
+        fields = ['id', 'username', 'email', 'birthday']
+
+
+# class ApplicationTypeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = ApplicationType
+#         fields = ['id', 'name']
+
+# class DesignerCategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = DesignerCategory
+#         fields = ['id', 'name']
+
+# class DesignerRegistrationSerializer(serializers.ModelSerializer):
+#     application_type = ApplicationTypeSerializer(many=True)
+#     designer_category = DesignerCategorySerializer(many=True)
+
+#     class Meta:
+#         model = DesignerRegistration
+#         fields = ['id', 'brand_name', 'email', 'phone_number', 'country', 'state', 'city', 'postal_code', 'application_type', 'designer_category']
+
+#     def create(self, validated_data):
+#         application_types_data = validated_data.pop('application_type')
+#         designer_categories_data = validated_data.pop('designer_category')
+
+#         designer_registration = DesignerRegistration.objects.create(**validated_data)
+#         for app_type_data in application_types_data:
+#             app_type, created = ApplicationType.objects.get_or_create(**app_type_data)
+#             designer_registration.application_type.add(app_type)
+#         for cat_data in designer_categories_data:
+#             cat, created = DesignerCategory.objects.get_or_create(**cat_data)
+#             designer_registration.designer_category.add(cat)
+
+#         return designer_registration
 
 
 class ApplicationTypeSerializer(serializers.ModelSerializer):
@@ -53,21 +85,26 @@ class DesignerRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DesignerRegistration
-        fields = ['id', 'brand_name', 'email', 'phone_number', 'country', 'state', 'city', 'postal_code', 'application_type', 'designer_category']
+        fields = [
+            'id', 'brand_name', 'email', 'phone_number', 'country', 
+            'state', 'city', 'postal_code', 'application_type', 'designer_category'
+        ]
 
     def create(self, validated_data):
         application_types_data = validated_data.pop('application_type')
         designer_categories_data = validated_data.pop('designer_category')
-
         designer_registration = DesignerRegistration.objects.create(**validated_data)
-        for app_type_data in application_types_data:
-            app_type, created = ApplicationType.objects.get_or_create(**app_type_data)
-            designer_registration.application_type.add(app_type)
-        for cat_data in designer_categories_data:
-            cat, created = DesignerCategory.objects.get_or_create(**cat_data)
-            designer_registration.designer_category.add(cat)
-
+        
+        for application_type_data in application_types_data:
+            application_type, created = ApplicationType.objects.get_or_create(**application_type_data)
+            designer_registration.application_type.add(application_type)
+        
+        for designer_category_data in designer_categories_data:
+            designer_category, created = DesignerCategory.objects.get_or_create(**designer_category_data)
+            designer_registration.designer_category.add(designer_category)
+        
         return designer_registration
+
 
 
 class MustReadSerializer(serializers.ModelSerializer):

@@ -119,6 +119,7 @@ class DesignerRegistration(models.Model):
     def __str__(self):
         return self.brand_name
 
+
 class ApplicationType(models.Model):
     name = models.CharField(max_length=20, choices=[
         ('exhibition', 'Exhibition'),
@@ -141,6 +142,7 @@ class DesignerCategory(models.Model):
 
     def __str__(self):
         return self.name
+
 # Designer application ends here 
 
 
