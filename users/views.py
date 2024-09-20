@@ -26,7 +26,7 @@ class LoginViewset(viewsets.ViewSet):
             if user: 
                 _, token = AuthToken.objects.create(user)                
                 # Return user data using UserSerializer
-                user_data = UserSerializer(user).data
+                user_data = CustomUserSerializer(user).data
                 
                 return Response(
                     {
@@ -75,9 +75,25 @@ class UserDetailView(APIView):
         return Response(serializer.data)
 
 
-class DesignerRegistrationCreateView(generics.CreateAPIView):
-    queryset = DesignerRegistration.objects.all()
-    serializer_class = DesignerRegistrationSerializer
+# from rest_framework import viewsets
+# from .models import Designer, DesignerRegistration
+# from .serializers import DesignerSerializer, DesignerRegistrationSerializer
+
+# class DesignerViewSet(viewsets.ModelViewSet):
+#     queryset = Designer.objects.all()
+#     serializer_class = DesignerSerializer
+
+# class DesignerRegistrationViewSet(viewsets.ModelViewSet):
+#     queryset = DesignerRegistration.objects.all()
+#     serializer_class = DesignerRegistrationSerializer
+
+# from rest_framework import generics
+# from .models import ExhibitionApplication
+# from .serializers import ExhibitionApplicationSerializer
+
+class ExhibitionApplicationCreateView(generics.CreateAPIView):
+    queryset = ExhibitionApplication.objects.all()
+    serializer_class = ExhibitionApplicationSerializer
 
 
 class MustReadListView(generics.ListAPIView):

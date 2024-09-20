@@ -97,6 +97,18 @@ REST_KNOX = {
     'TOKEN_TTL': timedelta(days=10),  # Tokens expire after 10 hours (optional)
 }
  
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'knox.auth.TokenAuthentication',  # Knox token authentication
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Ensuring users are authenticated
+    ],
+}
+
+
+APPEND_SLASH = True
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://arcade-dynasty.vercel.app",

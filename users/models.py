@@ -10,7 +10,9 @@ from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
-
+from django.db import models
+from django.conf import settings
+from django.contrib.auth import get_user_model
 
 # Registration models 
 class CustomUserManager(BaseUserManager):
@@ -35,7 +37,6 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(username=username, email=email, password=password, **extra_fields)
 
-
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=200, null=True, blank=True)
     email = models.EmailField(max_length=200, unique=True)
@@ -57,7 +58,6 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
-
 
 # Password reset model 
 @receiver(reset_password_token_created)
@@ -86,65 +86,24 @@ def password_reset_token_created(reset_password_token, *args, **kwargs):
     msg.attach_alternative(html_message, "text/html")
     msg.send()
 
+from django.db import models
 
-# Designer Registration Form model
-class DesignerRegistration(models.Model):
-    APPLICATION_TYPE_CHOICES = [
-        ('exhibition', 'Exhibition'),
-        ('runway', 'Runway'),
-        ('both', 'Both'),
-    ]
-
-    DESIGNER_CATEGORY_CHOICES = [
-        ('Fashion Designer', 'Fashion Designer'),
-        ('Exclusive Designer', 'Exclusive Designer'),
-        ('Stylists', 'Stylists'),
-        ('Accessory Designer', 'Accessory Designer'),
-        ('Emerging Designer', 'Emerging Designer'),
-        ('Established Designer', 'Established Designer'),
-    ]
-
-    brand_name = models.CharField(max_length=255)
+class ExhibitionApplication(models.Model):
+    brand_name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15)
     email = models.EmailField()
-    phone_number = models.CharField(max_length=20)
-    country = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=20)
-    
-    # Updated to support multiple selections
-    application_type = models.ManyToManyField('ApplicationType')
-    designer_category = models.ManyToManyField('DesignerCategory')
+    country = models.CharField(max_length=50)
+    state = models.CharField(max_length=50, blank=True)
+    city = models.CharField(max_length=50)
+    postal_code = models.CharField(max_length=10)
+
+    application_type = models.JSONField()  # To store multiple choices
+    designer_category = models.JSONField()  # To store multiple choices
+    submitted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.brand_name
-
-
-class ApplicationType(models.Model):
-    name = models.CharField(max_length=20, choices=[
-        ('exhibition', 'Exhibition'),
-        ('runway', 'Runway'),
-        ('both', 'Both'),
-    ])
-
-    def __str__(self):
-        return self.name
-
-class DesignerCategory(models.Model):
-    name = models.CharField(max_length=30, choices=[
-        ('Fashion Designer', 'Fashion Designer'),
-        ('Exclusive Designer', 'Exclusive Designer'),
-        ('Stylists', 'Stylists'),
-        ('Accessory Designer', 'Accessory Designer'),
-        ('Emerging Designer', 'Emerging Designer'),
-        ('Established Designer', 'Established Designer'),
-    ])
-
-    def __str__(self):
-        return self.name
-
-# Designer application ends here 
-
+    
 
 # Mustread section model 
 class MustRead(models.Model):
