@@ -7,9 +7,12 @@ from django.contrib.auth import get_user_model, authenticate
 from knox.models import AuthToken
 from rest_framework.views import APIView
 
-from rest_framework.decorators import api_view
+# from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
+# send mail to applicant - designer's application
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 User = get_user_model()
 
@@ -75,27 +78,47 @@ class UserDetailView(APIView):
         return Response(serializer.data)
 
 
-# from rest_framework import viewsets
-# from .models import Designer, DesignerRegistration
-# from .serializers import DesignerSerializer, DesignerRegistrationSerializer
-
-# class DesignerViewSet(viewsets.ModelViewSet):
-#     queryset = Designer.objects.all()
-#     serializer_class = DesignerSerializer
-
-# class DesignerRegistrationViewSet(viewsets.ModelViewSet):
-#     queryset = DesignerRegistration.objects.all()
-#     serializer_class = DesignerRegistrationSerializer
-
-# from rest_framework import generics
-# from .models import ExhibitionApplication
-# from .serializers import ExhibitionApplicationSerializer
-
+# Exhibition application view
 class ExhibitionApplicationCreateView(generics.CreateAPIView):
     queryset = ExhibitionApplication.objects.all()
     serializer_class = ExhibitionApplicationSerializer
 
+    """ Function to send mail after a successful registration """
+    def perform_create(self, serializer):
+        application = serializer.save()
 
+        # Email to the user (applicant)
+        user_subject = 'Application Received'
+        user_message = render_to_string('emails/user_application_received.html', {'application': application})
+        user_email = application.email
+        send_mail(
+            subject=user_subject,
+            message='Your application details have been received',  # Optional plain text fallback
+            from_email='lastborn.ai@gmail.com',
+            recipient_list=[user_email],
+            fail_silently=False,
+            html_message=user_message  # Send the HTML version of the email
+        )
+
+        # Email to the admin
+        admin_subject = 'New Exhibition Application Submitted'
+        admin_message = render_to_string('emails/admin_application_notification.html', {'application': application})
+        send_mail(
+            subject=admin_subject,
+            message='A new exhibition application has been submitted',  # Optional plain text fallback
+            from_email='lastborn.ai@gmail.com',
+            recipient_list=['arcademw1@gmail.com'],
+            fail_silently=False,
+            html_message=admin_message  # Send the HTML version of the email
+        )
+
+    # Overriding the create method for a custom response
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        return Response({'message': 'Application submitted successfully!'}, status=status.HTTP_201_CREATED)
+
+
+# Must read field 
 class MustReadListView(generics.ListAPIView):
     queryset = MustRead.objects.all()
     serializer_class = MustReadSerializer

@@ -23,6 +23,7 @@ environ.Env.read_env()
 import dj_database_url
 
 # Environment configuration 
+
 ENVIRONMENT = env('ENVIRONMENT', default="development")
 ENVIRONMENT = "production"
 

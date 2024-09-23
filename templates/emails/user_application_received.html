@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Received</title>
+    <style>
+        /* Internal CSS for email styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .logo-container {
+            /* text-align: center; */
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-width: 150px;
+            height: auto;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            color: #555555;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fafafa;
+            padding: 10px;
+            border-bottom: 1px solid #dddddd;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        .email-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+        @media screen and (max-width: 600px) {
+            .email-container {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            p {
+                font-size: 14px;
+            }
+            .logo-container img {
+                max-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Company's logo section -->
+        <div class="logo-container">
+            <img src="https://res.cloudinary.com/dcrgkyf8m/image/upload/v1727096461/arcade-dynasty-logo_ufz6nj.png" alt="Arcade Dynasty">
+        </div>
+        <!-- Email content -->
+        <h1>Application Received</h1>
+        <p>Dear {{ application.brand_name }},</p>
+        <p>Thank you for your application. We have received the following details:</p>
+        <ul>
+            <li><strong>Brand Name:</strong> {{ application.brand_name }}</li>
+            <li><strong>Phone Number:</strong> {{ application.phone_number }}</li>
+            <li><strong>Email:</strong> {{ application.email }}</li>
+            <li><strong>Country:</strong> {{ application.country }}</li>
+            <li><strong>City:</strong> {{ application.city }}</li>
+            <li><strong>Application Type:</strong> {{ application.application_type }}</li>
+            <li><strong>Designer Category:</strong> {{ application.designer_category }}</li>
+        </ul>
+        <p>We will review your application and get back to you soon.</p>
+
+        <!-- Footer section -->
+        <div class="email-footer">
+            <p>&copy; 2024 Arcade Dynasty. All Rights Reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -59,6 +59,7 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+
 # Password reset model 
 @receiver(reset_password_token_created)
 def password_reset_token_created(reset_password_token, *args, **kwargs):
@@ -71,7 +72,7 @@ def password_reset_token_created(reset_password_token, *args, **kwargs):
 
     context = {"full_link": full_link, "email_adress": reset_password_token.user.email}
 
-    html_message = render_to_string("backend/email.html", context=context)
+    html_message = render_to_string("emails/password_reset_email.html", context=context)
     plain_message = strip_tags(html_message)
 
     msg = EmailMultiAlternatives(
@@ -86,8 +87,8 @@ def password_reset_token_created(reset_password_token, *args, **kwargs):
     msg.attach_alternative(html_message, "text/html")
     msg.send()
 
-from django.db import models
 
+# exhibition 
 class ExhibitionApplication(models.Model):
     brand_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
