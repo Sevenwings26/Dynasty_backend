@@ -16,15 +16,12 @@ from django.conf.urls.static import static
 router = DefaultRouter()
 router.register("register", RegisterViewset, basename="register")
 router.register("login", LoginViewset, basename="login")
-# router.register(r'designer-registrations', DesignerRegistrationViewSet)
-# router.register(r'designer-registration', DesignerRegistrationViewSet)
+
 
 # Define the additional URL patterns
 urlpatterns = [
     # registration form 
     path('api/applications/', ExhibitionApplicationCreateView.as_view(), name='application-create'),
-    # path('designer-registration/', register_designer, name='designer-registration'),
-    # path('designer/register/', DesignerRegistrationView.as_view(), name='designer-register'),
 
     # api get 
     path('api/gallery/', MustReadListView.as_view(), name='gallery-list'),

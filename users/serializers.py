@@ -107,7 +107,7 @@ class ExhibitionApplicationSerializer(serializers.ModelSerializer):
         model = ExhibitionApplication
         fields = '__all__'
 
-# Must read 
+# Must-read 
 class MustReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = MustRead
