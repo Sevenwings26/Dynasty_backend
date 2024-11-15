@@ -75,7 +75,7 @@
             <img src="https://res.cloudinary.com/dcrgkyf8m/image/upload/v1727096461/arcade-dynasty-logo_ufz6nj.png" alt="Arcade Dynasty">
         </div>
         <h1>New Exhibition Application</h1>
-        <p>A new exhibition application has been submitted with the following details:</p>
+        <p>Apllicant Details:</p>
         <ul>
             <li><strong>Brand Name:</strong> {{ application.brand_name }}</li>
             <li><strong>Phone Number:</strong> {{ application.phone_number }}</li>
@@ -88,6 +88,7 @@
             <li><strong>Application Type:</strong> {{ application.application_type }}</li>
             <li><strong>Designer Category:</strong> {{ application.designer_category }}</li>
             <li style="margin-bottom: 10px;"><strong>Submission Date:</strong> {{ submission_date|date:"F j, Y, g:i a" }}</li>
+       
         </ul>
         <div class="email-footer">
             <p>&copy; 2024 Arcade Dynasty. All Rights Reserved.</p>
