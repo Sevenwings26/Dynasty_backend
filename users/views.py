@@ -14,6 +14,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from django.utils.timezone import now
+from weasyprint import HTML
 
 User = get_user_model()
 
@@ -105,16 +107,7 @@ from django.utils.timezone import now
 from weasyprint import HTML
 
 # Exhibition application view
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from rest_framework import generics
-from django.utils.timezone import now
-from .models import ExhibitionApplication
-from .serializers import ExhibitionApplicationSerializer
-from weasyprint import HTML
-from django.core.files.base import ContentFile
-from django.core.mail import EmailMessage
-from io import BytesIO
+
 
 class ExhibitionApplicationCreateView(generics.CreateAPIView):
     queryset = ExhibitionApplication.objects.all()
