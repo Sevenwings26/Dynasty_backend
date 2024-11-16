@@ -89,7 +89,6 @@ class RegisterViewset(viewsets.ViewSet):
 #     serializer_class = RegisterSerializer
 
 
-
 class UserDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -124,7 +123,7 @@ class ExhibitionApplicationCreateView(generics.CreateAPIView):
         user_email = application.email
         send_mail(
             subject=user_subject,
-            message='Your application details have been received',  # Optional plain text fallback
+            # message='Your application details have been received',  # Optional plain text fallback
             from_email='lastborn.ai@gmail.com',
             recipient_list=[user_email],
             fail_silently=False,
