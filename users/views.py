@@ -15,7 +15,7 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.timezone import now
-from weasyprint import HTML
+# from weasyprint import HTML
 
 User = get_user_model()
 
@@ -103,11 +103,9 @@ class UserDetailView(APIView):
         return Response(serializer.data)
 
 from django.utils.timezone import now
-from weasyprint import HTML
+
 
 # Exhibition application view
-
-
 class ExhibitionApplicationCreateView(generics.CreateAPIView):
     queryset = ExhibitionApplication.objects.all()
     serializer_class = ExhibitionApplicationSerializer
@@ -123,18 +121,13 @@ class ExhibitionApplicationCreateView(generics.CreateAPIView):
         user_email = application.email
         send_mail(
             subject=user_subject,
-            # message='Your application details have been received',  # Optional plain text fallback
             from_email='lastborn.ai@gmail.com',
             recipient_list=[user_email],
             fail_silently=False,
             html_message=user_message  # Send the HTML version of the email
         )
 
-        # Generate PDF for the admin with the application details
-        html_content = render_to_string('emails/application_pdf.html', {'application': application})
-        pdf = HTML(string=html_content).write_pdf()
-
-        # Prepare email to the admin with the PDF attachment
+        # Prepare email to the admin
         admin_subject = 'New Exhibition Application Submitted'
         admin_message = render_to_string('emails/admin_application_notification.html', {'application': application, 'submission_date': submission_date})
         email = EmailMessage(
@@ -144,56 +137,8 @@ class ExhibitionApplicationCreateView(generics.CreateAPIView):
             to=['arcademw1@gmail.com'],
         )
 
-        # Attach the generated PDF as a file to the admin email
-        email.attach('application_details.pdf', pdf, 'application/pdf')
-
-        # Send the email to the admin with the PDF attached
+        # Send the email to the admin without the PDF attachment
         email.send(fail_silently=False)
-
-
-# class ExhibitionApplicationCreateView(generics.CreateAPIView):
-#     queryset = ExhibitionApplication.objects.all()
-#     serializer_class = ExhibitionApplicationSerializer
-
-#     """ Function to send mail after a successful registration """
-#     def perform_create(self, serializer):
-#         application = serializer.save()
-#         submission_date = now()  # current date and time
-
-#         # Email to the user (applicant)
-#         user_subject = 'Application Received'
-#         user_message = render_to_string('emails/user_application_received.html', {'application': application})
-#         user_email = application.email
-#         send_mail(
-#             subject=user_subject,
-#             message='Your application details have been received',  # Optional plain text fallback
-#             from_email='lastborn.ai@gmail.com',
-#             recipient_list=[user_email],
-#             fail_silently=False,
-#             html_message=user_message  # Send the HTML version of the email
-#         )
-
-#         # Email to the admin
-#         # add downloadable file
-#         html_content = render_to_string('emails/application_pdf.html', {'application': application})
-#         pdf = HTML(string=html_content).write_pdf()
-
-#         admin_subject = 'New Exhibition Application Submitted'
-#         admin_message = render_to_string('emails/admin_application_notification.html', {'application': application, 'submission_date': submission_date})
-#         send_mail(
-#             subject=admin_subject,
-#             message='A new exhibition application has been submitted',  # Optional plain text fallback
-#             from_email='lastborn.ai@gmail.com',
-#             recipient_list=['arcademw1@gmail.com'],
-#             fail_silently=False,
-#             html_message=admin_message  # Send the HTML version of the email
-#         )
-
-
-    # Overriding the create method for a custom response
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return Response({'message': 'Application submitted successfully!'}, status=status.HTTP_201_CREATED)
 
 
 # Must read field 
