@@ -10,13 +10,13 @@ from datetime import timedelta
 import environ
 env = environ.Env()
 environ.Env.read_env()
-
 # database 
+
 import dj_database_url
 
 # Environment configuration 
 ENVIRONMENT = env('ENVIRONMENT', default="development")
-# ENVIRONMENT = "production"
+ENVIRONMENT = "production"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +39,6 @@ if ENVIRONMENT == "development":
     ALLOWED_HOSTS = []
 else:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'dynasty-backend.onrender.com']
-
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
