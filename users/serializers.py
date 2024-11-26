@@ -46,62 +46,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'birthday']
 
 
-
-# from rest_framework import serializers
-# from .models import DesignerRegistration, ApplicationType, DesignerCategory
-
-# class ApplicationTypeSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ApplicationType
-#         fields = ['id', 'name']
-
-# class DesignerCategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = DesignerCategory
-#         fields = ['id', 'name']
-
-# class DesignerRegistrationSerializer(serializers.ModelSerializer):
-#     application_type = ApplicationTypeSerializer(many=True)
-#     designer_category = DesignerCategorySerializer(many=True)
-
-#     class Meta:
-#         model = DesignerRegistration
-#         fields = [
-#             'brand_name', 'phone_number', 'email', 'country', 'state',
-#             'city', 'postal_code', 'application_type', 'designer_category'
-#         ]
-
-#     def create(self, validated_data):
-#         application_types_data = validated_data.pop('application_type')
-#         designer_categories_data = validated_data.pop('designer_category')
-#         registration = DesignerRegistration.objects.create(**validated_data)
-
-#         for app_type_data in application_types_data:
-#             app_type, created = ApplicationType.objects.get_or_create(**app_type_data)
-#             registration.application_type.add(app_type)
-
-#         for designer_cat_data in designer_categories_data:
-#             designer_cat, created = DesignerCategory.objects.get_or_create(**designer_cat_data)
-#             registration.designer_category.add(designer_cat)
-
-#         return registration
-
-# from rest_framework import serializers
-# from .models import Designer, DesignerRegistration
-
-# class DesignerSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Designer
-#         fields = '__all__'
-
-# class DesignerRegistrationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = DesignerRegistration
-#         fields = '__all__'
-
-# from rest_framework import serializers
-# from .models import ExhibitionApplication
-
 class ExhibitionApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExhibitionApplication
