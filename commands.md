@@ -4,7 +4,6 @@ pip install ----
     djangorestframework
     django-cors-headers
     
-    asgiref==3.8.1
 backports.zoneinfo==0.2.1;python_version<"3.9"
 certifi==2024.8.30
 charset-normalizer==3.3.2
