@@ -112,99 +112,104 @@ class UserDetailView(APIView):
         return Response(serializer.data)
 
 
-logger = logging.getLogger(__name__)
 
 class ExhibitionApplicationCreateView(generics.CreateAPIView):
     queryset = ExhibitionApplication.objects.all()
     serializer_class = ExhibitionApplicationSerializer
-    permission_classes = [AllowAny]
 
-    """Function to send mail after a successful registration"""
+    """ Function to send mail after a successful registration """
     def perform_create(self, serializer):
-        try:
-            application = serializer.save()
-            submission_date = now()  # Get current date and time
+        application = serializer.save()
 
-            # Email to the user (applicant)
-            self.send_user_email(application)
+        # Email to the user (applicant)
+        user_subject = 'Application Received'
+        user_message = render_to_string('emails/user_application_received.html', {'application': application})
+        user_email = application.email
+        send_mail(
+            subject=user_subject,
+            message='Your application details have been received',  # Optional plain text fallback
+            from_email='lastborn.ai@gmail.com',
+            recipient_list=[user_email],
+            fail_silently=False,
+            html_message=user_message  # Send the HTML version of the email
+        )
 
-            # Email to the admin
-            self.send_admin_email(application, submission_date)
+        # Email to the admin
+        admin_subject = 'New Exhibition Application Submitted'
+        admin_message = render_to_string('emails/admin_application_notification.html', {'application': application})
+        send_mail(
+            subject=admin_subject,
+            message='A new exhibition application has been submitted',  # Optional plain text fallback
+            from_email='lastborn.ai@gmail.com',
+            recipient_list=['arcademw1@gmail.com'],
+            fail_silently=False,
+            html_message=admin_message  # Send the HTML version of the email
+        )
 
-        except Exception as e:
-            logger.error(f"Error occurred while processing the application: {e}")
-            raise  # Re-raise the exception to maintain the API behavior
-
-    def send_user_email(self, application):
-        """Send confirmation email to the applicant"""
-        try:
-            user_subject = 'Application Received'
-            user_message = render_to_string('emails/user_application_received.html', {'application': application})
-            user_email = application.email
-            send_mail(
-                subject=user_subject,
-                from_email='lastborn.ai@gmail.com',
-                recipient_list=[user_email],
-                fail_silently=False,
-                html_message=user_message,  # Send the HTML version of the email
-            )
-        except Exception as e:
-            logger.error(f"Error sending user email for application {application.id}: {e}")
-
-    def send_admin_email(self, application, submission_date):
-        """Send notification email to the admin"""
-        try:
-            admin_subject = 'New Exhibition Application Submitted'
-            admin_message = render_to_string(
-                'emails/admin_application_notification.html',
-                {'application': application, 'submission_date': submission_date}
-            )
-            email = EmailMessage(
-                subject=admin_subject,
-                body=admin_message,
-                from_email='lastborn.ai@gmail.com',
-                to=['arcademw1@gmail.com'],
-            )
-            email.send(fail_silently=False)
-        except Exception as e:
-            logger.error(f"Error sending admin email for application {application.id}: {e}")
+    # Overriding the create method for a custom response
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        return Response({'message': 'Application submitted successfully!'}, status=status.HTTP_201_CREATED)
 
 
 
-# Exhibition application view
+# logger = logging.getLogger(__name__)
+
 # class ExhibitionApplicationCreateView(generics.CreateAPIView):
 #     queryset = ExhibitionApplication.objects.all()
 #     serializer_class = ExhibitionApplicationSerializer
+#     permission_classes = [AllowAny]
 
-#     """ Function to send mail after a successful registration """
+#     """Function to send mail after a successful registration"""
 #     def perform_create(self, serializer):
-#         application = serializer.save()
-#         submission_date = now()  # Get current date and time
+#         try:
+#             application = serializer.save()
+#             submission_date = now()  # Get current date and time
 
-#         # Email to the user (applicant)
-#         user_subject = 'Application Received'
-#         user_message = render_to_string('emails/user_application_received.html', {'application': application})
-#         user_email = application.email
-#         send_mail(
-#             subject=user_subject,
-#             from_email='lastborn.ai@gmail.com',
-#             recipient_list=[user_email],
-#             fail_silently=False,
-#             html_message=user_message  # Send the HTML version of the email
-#         )
+#             # Email to the user (applicant)
+#             self.send_user_email(application)
 
-#         # Prepare email to the admin
-#         admin_subject = 'New Exhibition Application Submitted'
-#         admin_message = render_to_string('emails/admin_application_notification.html', {'application': application, 'submission_date': submission_date})
-#         email = EmailMessage(
-#             subject=admin_subject,
-#             body=admin_message,
-#             from_email='lastborn.ai@gmail.com',
-#             to=['arcademw1@gmail.com'],
-#         )
+#             # Email to the admin
+#             self.send_admin_email(application, submission_date)
 
-#         # Send the email to the admin without the PDF attachment
-#         email.send(fail_silently=False)
+#         except Exception as e:
+#             logger.error(f"Error occurred while processing the application: {e}")
+#             raise  # Re-raise the exception to maintain the API behavior
+
+#     def send_user_email(self, application):
+#         """Send confirmation email to the applicant"""
+#         try:
+#             user_subject = 'Application Received'
+#             user_message = render_to_string('emails/user_application_received.html', {'application': application})
+#             user_email = application.email
+#             send_mail(
+#                 subject=user_subject,
+#                 from_email='lastborn.ai@gmail.com',
+#                 recipient_list=[user_email],
+#                 fail_silently=False,
+#                 html_message=user_message,  # Send the HTML version of the email
+#             )
+#         except Exception as e:
+#             logger.error(f"Error sending user email for application {application.id}: {e}")
+
+#     def send_admin_email(self, application, submission_date):
+#         """Send notification email to the admin"""
+#         try:
+#             admin_subject = 'New Exhibition Application Submitted'
+#             admin_message = render_to_string(
+#                 'emails/admin_application_notification.html',
+#                 {'application': application, 'submission_date': submission_date}
+#             )
+#             email = EmailMessage(
+#                 subject=admin_subject,
+#                 body=admin_message,
+#                 from_email='lastborn.ai@gmail.com',
+#                 to=['arcademw1@gmail.com'],
+#             )
+#             email.send(fail_silently=False)
+#         except Exception as e:
+#             logger.error(f"Error sending admin email for application {application.id}: {e}")
+
 
 
 # Must read field 
