@@ -30,16 +30,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-# from rest_framework import serializers
-# from .models import CustomUser
-
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CustomUser
-#         fields = ['id', 'username', 'email', 'birthday']  # Include any other fields you want to expose
-
-
-
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser

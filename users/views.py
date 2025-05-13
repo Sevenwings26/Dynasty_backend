@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django_q.tasks import async_task
 from rest_framework import viewsets, permissions, status, generics
 from .serializers import *
 from .models import * 
@@ -14,15 +15,26 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, EmailMessage
 
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+import threading
+
 
 User = get_user_model()
-
-
 class RegisterViewset(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
 
+    @swagger_auto_schema(
+        operation_summary="Register a new user",
+        operation_description="Creates a new user and sends a welcome email.",
+        request_body=RegisterSerializer,
+        responses={
+            201: openapi.Response("Registration successful! A welcome email has been sent."),
+            400: "Bad request - validation failed"
+        }
+    )
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -50,7 +62,7 @@ class RegisterViewset(viewsets.ViewSet):
             except Exception as e:
                 return Response({"message": "User registered but failed to send email", "error": str(e)}, status=201)
 
-            return Response({"message": "Registration successful! A welcome email has been sent."}, status=201)
+            return Response({"message": "Registration successful! A welcome email has been sent.", "username": user.username, "email": user.email}, status=201)
         else:
             return Response(serializer.errors, status=400)
 
@@ -58,7 +70,7 @@ class RegisterViewset(viewsets.ViewSet):
 class LoginViewset(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = LoginSerializer
-
+    
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(): 

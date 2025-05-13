@@ -38,12 +38,12 @@ else:
 if ENVIRONMENT == "development":
     ALLOWED_HOSTS = []
 else:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'dynasty-backend.onrender.com']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('BACKEND_SERVER')]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "https://arcade-dynasty.vercel.app",
-    "https://dynasty-backend.onrender.com",
+    env('FRONTEND_LOCAL_URL'),
+    env('FRONTEND_VERCEL_URL'),
+    env('BACKEND_SERVER')
 ]
 
 # Application definition
@@ -65,17 +65,21 @@ INSTALLED_APPS = [
     'corsheaders',
     'knox',
     'django_rest_passwordreset',
+    'drf_yasg',
 
     # media production
     'cloudinary_storage',
     'cloudinary',
+
+    # # queue task
+    # "django_q"
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -85,7 +89,7 @@ MIDDLEWARE = [
 
 # Knox configuration
 REST_KNOX = {
-    'TOKEN_TTL': timedelta(days=10),  # Tokens expire after 10 hours (optional)
+    'TOKEN_TTL': timedelta(days=10),
 }
  
 REST_FRAMEWORK = {
@@ -115,8 +119,9 @@ CORS_ALLOWED_METHODS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOW_HEADERS = [
+CORS_ALLOW_HEADERS =[
         'accept',
         'accept-encoding',
         'authorization',
@@ -132,6 +137,17 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:5173",
 ]
 
+# # for asynchronous task 
+# Q_CLUSTER = {
+#     'name': 'DjangoQCluster',
+#     'workers': 4,
+#     'recycle': 500,
+#     'timeout': 60,
+#     'retry': 120,
+#     'queue_limit': 50,
+#     'bulk': 10,
+#     'orm': 'default'  # Use ORM as broker
+# }
 
 AUTH_USER_MODEL = "users.CustomUser"
 
@@ -244,16 +260,24 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 #the email settings
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-# EMAIL_PORT = 465
-EMAIL_USE_TLS = True
-# EMAIL_USE_SSL = True
-EMAIL_HOST_USER = env("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER")
-ACCOUNT_EMAIL_SUBJECT_PREFIX = env("ACCOUNT_EMAIL_SUBJECT_PREFIX")
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# # EMAIL_PORT = 465
+# EMAIL_USE_TLS = True
+# # EMAIL_USE_SSL = True
+# EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+# DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER")
+# ACCOUNT_EMAIL_SUBJECT_PREFIX = env("ACCOUNT_EMAIL_SUBJECT_PREFIX")
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey'  
+EMAIL_HOST_PASSWORD = env("SENDGRID_API_KEY")
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL') 
+ACCOUNT_EMAIL_SUBJECT_PREFIX = env("ACCOUNT_EMAIL_SUBJECT_PREFIX")
 
