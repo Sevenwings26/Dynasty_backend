@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django_q.tasks import async_task
 from rest_framework import viewsets, permissions, status, generics
 from .serializers import *
 from .models import * 
