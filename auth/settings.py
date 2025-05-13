@@ -32,7 +32,7 @@ SECRET_KEY = env("SECRET_KEY")
 if ENVIRONMENT == 'development':
     DEBUG = True
 else:
-    DEBUG = False
+    DEBUG = True
 
 # Hosting platforms 
 if ENVIRONMENT == "development":
