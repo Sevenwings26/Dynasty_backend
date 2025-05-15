@@ -32,7 +32,7 @@ SECRET_KEY = env("SECRET_KEY")
 if ENVIRONMENT == 'development':
     DEBUG = True
 else:
-    DEBUG = True
+    DEBUG = False
 
 # Hosting platforms 
 if ENVIRONMENT == "development":
@@ -43,7 +43,7 @@ else:
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "https://arcade-dynasty.vercel.app",
-    'dynasty-backend.onrender.com'
+    'https://dynasty-backend.onrender.com'
 ]
 
 # Application definition
@@ -107,6 +107,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://arcade-dynasty.vercel.app",
     'https://dynasty-backend.onrender.com',
+    'https://www.arcade-dynasty.com',
 ]
 
 CORS_ALLOWED_METHODS = [
